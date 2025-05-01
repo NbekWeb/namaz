@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Noto_Sans } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import { Toaster } from 'sonner'
 
 import { SITE_NAME } from '@/constants/seo.constants'
@@ -7,13 +7,14 @@ import { SITE_NAME } from '@/constants/seo.constants'
 import './globals.scss'
 import { Providers } from './providers'
 
-const zen = Noto_Sans({
-	subsets: ['cyrillic', 'latin'],
-	weight: ['300', '400', '500', '600', '700'],
+
+const montserrat = Montserrat({
+	subsets: ['latin'],
+	weight: ['400', '500', '700'],
 	display: 'swap',
-	variable: '--font-zen',
-	style: ['normal']
-})
+	variable: '--font-montserrat',
+	style: ['normal'],
+  })
 
 export const metadata: Metadata = {
 	title: {
@@ -30,7 +31,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body className={zen.className}>
+			<body className={` ${montserrat.className}`}>
 				<Providers>
 					{children}
 

@@ -20,16 +20,22 @@ const config: Config = {
 				brandLinear: '#868CFF',
 				transparent: 'transparent',
 				gray: {
-					50: '#F5F6FA',
+					50: '#FCFCFC',
 					100: '#EEF0F6',
+					150: '#F2F2F2',
 					200: '#DADEEC',
+					250: '#D9D9D9',
 					300: '#C9D0E3',
 					400: '#B0BBD5',
 					500: '#B5BED9',
 					600: '#A3AED0',
 					700: '#707eae',
 					800: '#2D396B',
+					850: '#8F8EA1',
 					900: '#1B2559'
+				},
+				dark:{
+					100:'#1E1D30',
 				},
 				navy: {
 					50: '#d0dcfb',
@@ -293,21 +299,20 @@ const config: Config = {
 			spacing: {
 				0.5: '0.12rem',
 				layout: '1.4rem',
+				'21.5':'86px',
+				18:'72px',
 				'big-layout': '2.3rem',
 				'tv-card': '250px',
 				'tv-icon': '60px',
 				'tv-padding': '16px',
 			},
 			fontSize: {
-				xs: '0.9rem',
-				sm: '1.07rem',
-				base: '1.18rem',
 				lg: '1.24rem',
-				xl: '1.38rem',
+				xl: '20px',
 				'1.5xl': '1.5rem',
 				'2xl': '1.82rem',
-				'3xl': '2.22rem',
-				'4xl': '2.66rem',
+				'3xl': '2rem',
+				'4xl': '2.5rem',
 				'5xl': '3.56rem',
 				'6xl': '4.44rem',
 				'7xl': '5.33rem',
@@ -446,8 +451,7 @@ const config: Config = {
 				smartHomeDropzone: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='13' ry='13' stroke='%23E0E5F2FF' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='5' stroke-linecap='square'/%3e%3c/svg%3e")`
 			},
 			screens: {
-				'sm': '576px',
-				'sm-max': { max: '576px' },
+				
 				'md': '768px',
 				'md-max': { max: '768px' },
 				'lg': '992px',
@@ -466,7 +470,15 @@ const config: Config = {
 				'pc1': '1500px',
 				'pc': '1902px',
 				'tv-4k': '2560px',
+				'sm': '576px',
+				'sm-max': { max: '576px' },
 			},
+			borderWidth: {
+				5: '5px',
+			  },
+			  borderRadius: {
+				'5xl': '48px',
+			  },
 		},
 		plugins: []
 	}

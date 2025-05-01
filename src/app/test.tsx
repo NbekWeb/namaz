@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,useRef} from 'react';
 import asr from '../pic/asr-1.png';
 import asr2 from '../pic/asr-2.png';
 import fadjr from '../pic/fadjr-1.png';
@@ -14,6 +14,8 @@ import shuruk2 from '../pic/shuruk-2.png';
 import zuhr from '../pic/zuhr-1.png';
 import zuhr1 from '../pic/zuhr-2.png';
 import woman from '../pic/woman.png';
+import phone from '../pic/phone.png';
+
 import qr from '../pic/qr.png';
 import Image, {StaticImageData} from 'next/image';
 import zuhr2 from "@/pic/zuhr-2.png";
@@ -66,19 +68,21 @@ interface City {
     logoUrl: string | null;
 }
 
+
+
 const PrayerTime: React.FC<PrayerTimeProps> = ({time, label, highlight, pic, pic2, remainingTime, progress}) => {
     return (
         <div
-            className={`w-[190px] h-[190px] tv:w-[200px] tv:h-[200px] pc1:w-[230px] pc1:h-[230px] pc:w-[302px] pc:h-[302px] mx-auto rounded-[50px] p-[20px] flex flex-col justify-start ${
-                highlight ? 'bg-[#5ec262]' : 'bg-white'
+            className={`w-full h-full  rounded-3xl  flex flex-col justify-between sm-max:gap-4 ${
+                highlight ? 'bg-[#5ec262] transform 2xl:scale-[120%]  p-2 ' : 'bg-white p-6 2xl-max:p-5 sm-max:p-4'
             }`}
         >
             {/* Верхняя часть: Иконка и блок времени */}
-            <div className="flex items-center"> 
+            <div className="flex items-start justify-between "> 
                 {/* Иконка */}
-                <div className="w-[50px] h-[50px] pc:w-[88px] pc:h-[88px] flex bg-transparent">
+                <div className={`w-[90px] h-[90px]  flex  3xl-max:w-[70px] 3xl-max:h-[70px] bg-transparent ${highlight&&'m-4 2xl-max:m-3 sm-max:m-2'}`}>
                     <Image
-                        className="max-w-full max-h-full object-contain"
+                        className="min-w-full min-h-full object-contain "
                         src={highlight ? pic2 : pic}
                         alt={label}
                     />
@@ -86,42 +90,41 @@ const PrayerTime: React.FC<PrayerTimeProps> = ({time, label, highlight, pic, pic
 
                 {/* Оставшееся время */}
                 {highlight && (
-                    <div className="w-full flex flex-col items-end justify-between">
-                        <div className="w-[87%] pc:w-[91%] bg-white rounded-tr-[50px] rounded-[10px] py-1 px-2 pc:px-4 pc:py-2 flex flex-col">
+                        <div className="2xl:flex-grow 2xl-max:pl-6  max-w-[160px] bg-white rounded-tr-3xl rounded-lg rounded-bl-[40px] p-3 flex flex-col items-end">
                             <div className="text-[#a0a2b1] text-[10px] pc:text-sm font-normal">осталось</div>
                             <div className="text-[#17181d] text-[12px] pc:text-base font-bold">
                                 {formatTime(remainingTime)}
                             </div>
-                        </div>
-                        {/* Прогресс-бар */}
-                        <div className="w-[87%] pc:w-[91%] h-2 bg-gray-200 rounded-full mt-1 pc:mt-2">
-                            <div
-                                className="h-full bg-white rounded-full"
-                                style={{width: `${progress}%`}}
-                            ></div>
-                        </div>
                     </div>
                 )}
+                      
             </div>
 
-            <div className="flex flex-col items-start mt-[15%]">
+            <div className={`flex flex-col items-start gap-0.5 ${highlight&&'px-4 pb-4 2xl-max:px-3 2xl-max:pb-3 sm-max:px-2 sm-max:pb-2'} ${
+                        highlight ? 'text-white' : 'text-dark-100'
+                    }`}>
                 {/* Время */}
                 <div
-                    className={`text-center text-[45px] pc:text-[64px] leading-none font-light ${
-                        highlight ? 'text-white' : 'text-[#17181d]'
-                    }`}
+                    className={`text-center text-[60px]  leading-none font-bold 3xl-max:text-[40px]`}
                 >
                     {time}
                 </div>
 
                 {/* Название молитвы */}
                 <div
-                    className={`text-center text-[22px] pc:text-[30px] font-bold ${
-                        highlight ? 'text-white' : 'text-[#17181d]'
-                    }`}
+                    className={`text-center text-[40px]  3xl-max:text-3xl`}
                 >
                     {label}
                 </div>
+                {highlight&&(
+
+                  <div className="w-full h-2 mt-8 3xl-max:mt-5 bg-gray-200 rounded-full ">
+                            <div
+                                className="h-full bg-white rounded-full min-w-1"
+                                style={{width: `${progress}%`}}
+                            ></div>
+                        </div>
+                )}
             </div>
         </div>
     );
@@ -240,6 +243,8 @@ export function Test() {
 
         return `${day} ${monthName} ${year}`;
     };
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const mosqueRef = useRef<HTMLDivElement | null>(null);
 
     // Запрос данных о городах
     useEffect(() => {
@@ -377,7 +382,36 @@ export function Test() {
         }
     }, [currentMosqueId]); // Зависимость от ID мечети
 
-
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+          if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target as Node)
+          ) {
+            setCityDropdownOpen(false);
+          }
+          if (
+            mosqueRef.current &&
+            !mosqueRef.current.contains(event.target as Node)
+          ) {
+            setMosqueDropdownOpen(false);
+          }
+        };
+        
+    
+        const handleScroll = () => {
+          setCityDropdownOpen(false);
+          setMosqueDropdownOpen(false);
+        };
+    
+        document.addEventListener("mousedown", handleClickOutside);
+        window.addEventListener("scroll", handleScroll);
+    
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+          window.removeEventListener("scroll", handleScroll);
+        };
+      }, []);
     const handleMosqueSelect = (mosque: Mosque) => {
         setSelectedMosque(mosque.name);
         setCurrentMosqueId(mosque.id); // Устанавливаем идентификатор текущей мечети
@@ -398,81 +432,83 @@ export function Test() {
     };
 
     return (
-        <div className="w-[100%] h-screen  bg-[#f6f6f6] p-[20px] overflow-auto">
+        <div className="w-full h-screen  bg-gray-150 p-6 overflow-x-hidden sm-max:p-4   2xl-max:p-5 ">
             <div
-                className="w-full bg-[#eeeeee] rounded-[40px] flex flex-wrap  xl:justify-between items-center p-[10px] xl-max:justify-center  lg-max:flex-col  ">
+                className="w-full border-5 border-gray-50 bg-gray-150  rounded-5xl flex items-center justify-between p-6  sm-max:p-4 sm-max:rounded-3xl   2xl-max:p-5 xl-max:flex-col xl-max:gap-4 sm-max:gap-3">
 
-                <div className="flex flex-wrap items-center space-x-6">
-                    <div className="text-[#17181d] text-[62px] lg:text-[52px] xl:text-[62px] font-extralight">
+                <div className="flex gap-8 items-center 2xl-max:gap-4">
+                    <div className="text-text-dark-100 min-w-max text-tv-time h-21.5 items-center  2xl-max:text-4xl sm-max:text-2xl   sm-max:rounded-xl font-bold py-3 px-12 2xl-max:px-5 rounded-3xl bg-gray-50 flex gap-0 ">
                         {new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})}
+                        <span className='text-3xl font-medium  flex w-12 min-w-12 sm-max:text-base'>:
+  {String(new Date().getSeconds()).padStart(2, '0')}
+</span>
                     </div>
-                    <div>
-                        <div className="text-[#17181d] text-[24px] lg:text-[20px] xl:text-[24px] font-extrabold">
-                            {new Date().toLocaleDateString('ru-RU', {day: 'numeric', month: 'long'})}
-                        </div>
-                        <div className="text-[#17181d] text-[24px] lg:text-[20px] xl:text-[24px] font-normal">
-                            {new Date().toLocaleDateString('ru-RU', {weekday: 'long'})}
-                        </div>
-                    </div>
+                    <p className='text-4xl font-medium 2xl-max:text-1.5xl sm-max:text-base'>
+                    {(() => {
+    const now = new Date();
+    const date = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+    const weekday = now.toLocaleDateString('ru-RU', { weekday: 'long' });
+    return `${date} ${weekday}`;
+  })()}
+                    </p>
+                   
                 </div>
 
-                <div className="flex flex-wrap items-center space-x-6 lg-max:justify-center lg:flex-row sm-max:flex-row lg-max:space-y-3 ">
-                    <div className="flex flex-col bg-white rounded-[25px] px-6 py-[10px] h-[86px] sm-max:px-3 ">
-                        <div className="text-[#a0a2b1] text-[18px] font-normal leading-[27.60px]">Дата по хиджре</div>
-                        <div className="text-[#17181d] text-[33px] sm-max:text-[25px] font-medium leading-[27.60px]">{getHijriDate()}</div>
+                <div className="flex flex-wrap items-center  lg-max:justify-center lg:flex-row sm-max:flex-row gap-4 ">
+                    <div className="flex flex-col bg-white rounded-2xl items-center font-medium  px-6 h-21.5 sm-max:h-12 sm-max:rounded-xl justify-center  sm-max:px-3 ">
+                        <div className="text-gray-850 text-base  sm-max:text-xs">Дата по хиджре</div>
+                        <div className="text-dark-100 text-1.5xl  sm-max:text-sm">{getHijriDate()}</div>
                     </div>
-                    <div className="flex items-left lg:space-x-[0%] sm:space-x-[15%] lg-max:w-full space-x-4 justify-center ">
-
-                        <div className="flex items-left flex-col ">
-                            <div className="text-[#a0a2b1] text-[18px] font-[400] leading-[21.60px] flex space-x-1.5">
-                                <div className="cursor-pointer relative"
-                                     onClick={() => setMosqueDropdownOpen(prev => !prev)}>
-                                    Мечеть
-                                    {mosqueDropdownOpen && (
+                    <div className="flex flex-col bg-white cursor-pointer relative rounded-2xl items-center font-medium sm-max:h-12 sm-max:rounded-xl  px-6 h-21.5 justify-center  sm-max:px-3 "  onClick={() => setCityDropdownOpen(prev => !prev)} ref={dropdownRef}>
+                        <div className="text-gray-850 text-base  sm-max:text-xs">Город</div>
+                        <div className="text-dark-100 text-1.5xl  sm-max:text-sm"> {selectedCity}  
+                             {cityDropdownOpen && (
                                         <div
-                                            className="absolute bg-white border rounded-lg shadow-lg w-[250px] max-h-96 overflow-y-auto z-1000">
+                                            className="absolute bg-white text-gray-850 border rounded-lg shadow-lg min-w-max max-h-48 overflow-y-auto z-1000 text-xl sm-max:text-sm sm-max:max-w-32 sm-max:min-w-32 sm-max:w-32">
+                                            {cities.map((city) => (
+                                                <div key={city.id} className="p-2 hover:bg-gray-200 cursor-pointer sm-max:truncate"
+                                                     onClick={() => {
+                                                         setSelectedCity(city.name);
+                                                     }}>
+                                                    {city.name}
+                                                </div>
+                                            ))}
+                                         </div>
+                                    )}
+                            
+                        </div>
+                    </div>
+                    <div className="flex flex-col bg-white rounded-2xl items-center font-medium  px-6 h-21.5 sm-max:h-12 sm-max:rounded-xl justify-center  sm-max:px-3 cursor-pointer "  onClick={() => setMosqueDropdownOpen(prev => !prev)} ref={mosqueRef}>
+                        <div className="text-gray-850 text-base sm-max:text-xs">Мечеть</div>
+                        <div className="text-dark-100 text-1.5xl  sm-max:text-sm">
+                        {selectedMosque}
+                        {mosqueDropdownOpen && (
+                                        <div
+                                            className="absolute bg-white border rounded-lg shadow-lg min-w-max max-h-48 overflow-y-auto z-1000 text-gray-850">
                                             {mosques.filter(mosque => mosque.cityId === currentCityId).map((mosque) => (
-                                                <div key={mosque.id} className="p-2 hover:bg-gray-200 cursor-pointer"
+                                                <div key={mosque.id} className="p-2 hover:bg-gray-200 cursor-pointer sm-max:text-sm"
                                                      onClick={() => handleMosqueSelect(mosque)}>
                                                     {mosque.name}
                                                 </div>
                                             ))}
                                         </div>
                                     )}
-                                </div>
-                                <div>·</div>
-                                <div className="cursor-pointer relative"
-                                     onClick={() => setCityDropdownOpen(prev => !prev)}>
-                                    {selectedCity}
-                                    {cityDropdownOpen && (
-                                        <div
-                                            className="absolute bg-white border rounded-lg shadow-lg w-[250px] max-h-96 overflow-y-auto z-1000">
-                                            {cities.map((city) => (
-                                                <div key={city.id} className="p-2 hover:bg-gray-200 cursor-pointer"
-                                                     onClick={() => {
-                                                         setCityDropdownOpen(false);
-                                                         setSelectedCity(city.name);
-                                                     }}>
-                                                    {city.name}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="text-[#17181d] text-[33px] leading-[35.60px] sm-max:text-[25px] ">{selectedMosque}</div>
-                        </div>
-                        <div>
-                            <img className="w-[61px] h-[61px] rounded-[20px]" src={getLogoUrl()} alt="avatar"/>
                         </div>
                     </div>
+                    <img className="w-21.5 h-21.5 object-cover rounded-3xl sm-max:h-12 sm-max:rounded-xl sm-max:w-12" src={getLogoUrl()} alt="avatar"/>
                 </div>
             </div>
-            <div className="flex flex-wrap justify-center  pc1:gap-4 w-full mt-[2%]">
+            <div className="grid grid-cols-6 sm-max:rounded-3xl    2xl-max:grid-cols-3 2xl-max:h-auto gap-5 rounded-5xl justify-between h-[400px]  w-full mt-10 border-5  sm-max:p-4 border-gray-50 bg-gray-150 p-6  sm-max:grid-cols-1 2xl-max:p-5 sm-max:mt-5">
                 {prayers.map((prayer, index) => (
-                    <div key={index} className=" mb-[1%] w-[200px] tv:w-[210px] pc1:w-[230px] pc:w-[297px] flex-shrink-1">
+                    <div       key={index} className={
+                        prayer.highlight
+                          ? index === 5
+                            ? 'ml-5 2xl-max:mx-0'
+                            : 'mx-5 2xl-max:mx-0'
+                          : ''
+                      }>
                         <PrayerTime
+                  
                             time={prayer.time}
                             label={prayer.label}
                             highlight={prayer.highlight}
@@ -484,27 +520,29 @@ export function Test() {
                     </div>
                 ))}
             </div>
-            <div className="w-full h-[330px] pc:h-[360px] bg-white rounded-[50px] flex sm-max:flex-col justify-between items-center px-6 md:px-12 py-4 relative mt-6">
-                <div className="flex items-center justify-center min-h-screen-xl xl-max:flex-col">
-                    <div className="w-full lg:w-[400px] xl:w-[500px] bg-[#F6F6F6] rounded-[50px] flex justify-center items-center relative p-[4%] xl-max:p-[2%]">
-                        <div className="text-[#17181D] text-[120px] lg:text-[90px] xl:text-[120px] xl-max:text-[100px] font-extrabold text-center">
+            <div className="w-full text-dark-100    flex justify-between items-center relative mt-18 h-[300px]   gap-6 lg-max:flex-col lg-max:h-auto lg-max:mt-10 sm-max:mt-5 sm-max:gap-4">
+            <div className="text-[80px]  font-bold rounded-3xl border-5 border-white leading-[100%] p-6 h-full lg-max:w-full lg-max:justify-center  flex items-center sm-max:text-[60px]">
                             {currentName.arabic}
                         </div>
-                    </div>
-                    <div className="ml-[7%] xl-max:ml-[0%] w-[100%]">
-                        <div className="text-[#17181D] text-[50px] pc1:text-[70px] font-extrabold text-center">
+                        <div className="flex lg-max:w-full lg-max:justify-center lg-max:p-5 flex-col flex-grow  h-full justify-center  rounded-3xl bg-gray-250 items-center gap-1 text-[60px] leading-[100%] font-bold 2xl-max:text-4xl sm-max:text-2xl">
+                        <div className="text-center">
                             {currentName.pronunciation}
                         </div>
-                        <div className="text-[#17181D] text-[40px] pc1:text-[60px] font-bold text-center">
+                        <div className="text-center">
                             {currentName.explanation}
                         </div>
                     </div>
-                </div>
-                <div className="w-[287px] lg:w-[250px] xl:w-[287px] h-[310px] pc:h-[340px] flex flex-col space-y-4 bg-[#5EC262] rounded-[50px] p-[35px]">
-                    <div className="text-white text-[13px] pc:text-[15px] text-center font-extrabold">
-                        Подробную информацию можно узнать по переходу с QR-кода
+               
+                <div className="  flex flex-col  h-full justify-between lg-max:w-full lg-max:max-w-full   bg-[#5EC262] rounded-3xl py-6 px-4 max-w-[270px] sm-max:items-center lg-max:gap-8">
+                    <div className='text-white text-3xl flex justify-between items-center font-bold'>
+                    Помощь
+                    мечети
+                    <Image
+                        className="w-[76px] h-[76px] object-contain "
+                        src={phone}
+                        alt="phone"
+                    />
                     </div>
-                    <div className="text-white text-[20px] flex justify-center font-extrabold">
                         {qrCode && (
                             <img 
                                 className="w-[190px] lg:w-[160px] xl:w-[190px] h-[190px] lg:h-[160px] xl:h-[190px] rounded-[20px]" 
@@ -513,7 +551,6 @@ export function Test() {
                                 alt="QR Code"
                             />
                         )}
-                    </div>
                 </div>
             </div>
         </div>
